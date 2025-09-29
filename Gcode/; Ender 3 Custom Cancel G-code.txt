@@ -1,0 +1,14 @@
+M104 S0 ; Turn off hotend
+M140 S0 ; Turn off bed
+M106 S0 ; Turn off fan
+
+G91 ; Relative positioning
+G1 Z10 F300 ; Lift nozzle
+G90 ; Absolute positioning
+G1 X0 Y243 F3000 ; Move head away from print (adjust to your bed size)
+
+M112
+G4 P5000
+M999
+
+M84 ; Disable motors
