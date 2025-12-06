@@ -1,0 +1,36 @@
+; Ender 3 Custom Start G-code - WITH Auto Temp Variables
+
+G92 E0 ; Reset Extruder
+M280 P0 S160 ; Reset (BLTouch/Probe Reset)
+G4 P500 ; Wait half a second
+M280 P0 S10 ; Deploy (BLTouch/Probe Deploy)
+G4 P500 ; Wait again
+M280 P0 S90 ; (BLTouch/Probe Stowed)
+G4 P500
+G28 ; Home all axes
+G1 X5 Y5 Z5 F30000 ; Move to X5 Y5 Z10 at a speed of 6000 mm/min
+
+; *** START - Temperature Commands Modified to use Slicer Variables ***
+M104 S{material_print_temperature_layer_0} ; Start heating up the nozzle most of the way (Non-blocking)
+M190 S{material_bed_temperature_layer_0} ; Start heating the bed, wait until target temperature reached (Blocking)
+M109 S{material_print_temperature_layer_0} ; Finish heating the nozzle, wait until target temperature reached (Blocking)
+; *** END - Temperature Commands Modified ***
+
+M300 S400 P500 ; B4 (Note) (Beep/Chime)
+G4 P500
+M300 S400 P500 ; B4 (Note) (Beep/Chime)
+G4 P150000 ; Long pause (2.5 minutes) - KEEP this if you need time for temp soak
+
+G28 ; Home all axes
+G29 ; Auto Bed Leveling
+M500 ; Save current settings (optional, but good after G29)
+M420 S1 ; Enable ABL mesh compensation
+
+G1 X0.1 Y20 Z0.3 F30000.0 ; Move to start position
+G1 X0.1 Y200.0 Z0.3 F1500.0 E15 ; Draw the first line
+G1 X0.4 Y200.0 Z0.3 F5000.0 ; Move to side a little
+G1 X0.4 Y20 Z0.3 F1500.0 E30 ; Draw the second line
+G92 E0 ; Reset Extruder
+G1 Z2.0 F3000 ; Move Z Axis up little to prevent scratching of Heat Bed
+G1 E-2.5 F3000 ; Retract filament slightly
+G1 X5 Y20 Z0.3 F5000.0 ; Move over to prevent blob squish

@@ -8,9 +8,12 @@ M280 P0 S90
 G4 P500
 G28 ; Home all axes
 G1 X5 Y5 Z5 F30000 ; Move to X5 Y5 Z10 at a speed of 6000 mm/min
-M104 S220 ; Start heating up the nozzle most of the way
-M190 S60 ; Start heating the bed, wait until target temperature reached
-M109 220 ; Finish heating the nozzle
+
+; Set Tool and Bed Temperatures based on Slicer's First Layer settings
+M104 S{material_print_temperature_layer_0} ; Start heating nozzle to first layer temp (non-blocking)
+M190 S{material_bed_temperature_layer_0} ; Heat bed to first layer temp and WAIT (blocking)
+M109 S{material_print_temperature_layer_0} ; Finish heating nozzle and WAIT (blocking)
+
 M300 S400 P500   ; B4 (Note)
 G4 P500
 M300 S400 P500   ; B4 (Note)
